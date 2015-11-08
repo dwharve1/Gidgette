@@ -21,18 +21,20 @@ Example:
 
 function AsyncResults(work,worker,cb){
         (function(){
+		var index = 0;
                 var results = [];
                 var current = null;
         
                 var finishWork = function(err, result){
                         if(err){cb(err,results);return;}
                         results.push({work: current, result: result});
+			index++;
                         next();
                 }
         
                 var next = function(){
-                        if(work.length > 0 && worker != null){
-                                current = work.shift();
+                        if(index < work.length && worker != null){
+                                current = work[index];
                                 worker(current,finishWork);
                         }else{
                                 cb(null,results);
